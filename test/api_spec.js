@@ -655,9 +655,8 @@ describe("api", function() {
       });
     });
     it("should allow unsafe update of named transformation", function() {
-      var transformationName;
       this.timeout(helper.TIMEOUT_MEDIUM);
-      transformationName = "api_test_transformation3" + SUFFIX;
+      let transformationName = "api_test_transformation3" + SUFFIX;
       return cloudinary.v2.api.create_transformation(transformationName, {
         crop: "scale",
         width: 102
