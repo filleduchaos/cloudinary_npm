@@ -44,6 +44,8 @@ exports.TIMEOUT_LONG = 50000;
 
 exports.SUFFIX = (ref = process.env.TRAVIS_JOB_ID) != null ? ref : Math.floor(Math.random() * 999999);
 
+console.log("Test suffix is: ", exports.SUFFIX);
+
 exports.SDK_TAG = "SDK_TEST"; // identifies resources created by all SDKs tests
 
 exports.TEST_TAG_PREFIX = "cloudinary_npm_test"; // identifies resources created by this SDK's tests

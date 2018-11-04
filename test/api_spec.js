@@ -66,6 +66,8 @@ PUBLIC_ID_6 = PUBLIC_ID + "_6";
 
 NAMED_TRANSFORMATION = "npm_api_test_transformation" + SUFFIX;
 
+const TRANSFORMATION_NAME_UNSAFE = "api_test_transformation3" + SUFFIX;
+
 API_TEST_UPLOAD_PRESET1 = "npm_api_test_upload_preset_1_" + SUFFIX;
 
 API_TEST_UPLOAD_PRESET2 = "npm_api_test_upload_preset_2_" + SUFFIX;
@@ -208,7 +210,15 @@ describe("api", function() {
       if (!(config.api_key && config.api_secret)) {
         expect().fail("Missing key and secret. Please set CLOUDINARY_URL.");
       }
-      return Q.allSettled([cloudinary.v2.api.delete_resources_by_tag(TEST_TAG), cloudinary.v2.api.delete_transformation(NAMED_TRANSFORMATION), cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET1), cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET2), cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET3), cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET4)]).finally(function() {});
+      return Q.allSettled([
+        cloudinary.v2.api.delete_resources_by_tag(TEST_TAG),
+        cloudinary.v2.api.delete_transformation(NAMED_TRANSFORMATION),
+        cloudinary.v2.api.delete_transformation(TRANSFORMATION_NAME_UNSAFE),
+        cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET1),
+        cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET2),
+        cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET3),
+        cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET4)
+      ]).finally(function() {});
     }
   });
   find_by_attr = function(elements, attr, value) {
@@ -656,19 +666,18 @@ describe("api", function() {
     });
     it("should allow unsafe update of named transformation", function() {
       this.timeout(helper.TIMEOUT_MEDIUM);
-      let transformationName = "api_test_transformation3" + SUFFIX;
-      return cloudinary.v2.api.create_transformation(transformationName, {
+      return cloudinary.v2.api.create_transformation(TRANSFORMATION_NAME_UNSAFE, {
         crop: "scale",
         width: 102
       }).then(function(result) {
-        return cloudinary.v2.api.update_transformation(transformationName, {
+        return cloudinary.v2.api.update_transformation(TRANSFORMATION_NAME_UNSAFE, {
           unsafe_update: {
             crop: "scale",
             width: 103
           }
         });
       }).then(function(result) {
-        return cloudinary.v2.api.transformation(transformationName);
+        return cloudinary.v2.api.transformation(TRANSFORMATION_NAME_UNSAFE);
       }).then(function(transformation) {
         expect(transformation).not.to.eql(void 0);
         expect(transformation.info).to.eql([
