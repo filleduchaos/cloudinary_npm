@@ -115,7 +115,6 @@ describe "api", ->
 
       Q.allSettled [
         cloudinary.v2.api.delete_resources_by_tag(TEST_TAG)
-        cloudinary.v2.api.delete_transformation(NAMED_TRANSFORMATION)
         cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET1)
         cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET2)
         cloudinary.v2.api.delete_upload_preset(API_TEST_UPLOAD_PRESET3)
@@ -355,6 +354,13 @@ describe "api", ->
     itBehavesLike "a list with a cursor", cloudinary.v2.api.transformation, EXPLICIT_TRANSFORMATION_NAME
     itBehavesLike "a list with a cursor", cloudinary.v2.api.transformations
 
+    transformationName = "api_test_transformation3" + SUFFIX
+    after ->
+      q.allSettled [
+        cloudinary.v2.api.delete_transformation(transformationName)
+        cloudinary.v2.api.delete_transformation(NAMED_TRANSFORMATION)]
+      .finally ->
+
     it "should allow listing transformations", () ->
       @timeout helper.TIMEOUT_MEDIUM
       cloudinary.v2.api.transformations()
@@ -405,7 +411,7 @@ describe "api", ->
 
     it "should allow unsafe update of named transformation", ()->
       @timeout helper.TIMEOUT_MEDIUM
-      transformationName = "api_test_transformation3" + SUFFIX
+
       console.log("Create transformation named: ", transformationName)
       cloudinary.v2.api.create_transformation(transformationName, {crop: "scale", width: 102})
       .then (result) ->
