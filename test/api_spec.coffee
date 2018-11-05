@@ -356,7 +356,7 @@ describe "api", ->
 
     transformationName = "api_test_transformation3" + SUFFIX
     after ->
-      q.allSettled [
+      Q.allSettled [
         cloudinary.v2.api.delete_transformation(transformationName)
         cloudinary.v2.api.delete_transformation(NAMED_TRANSFORMATION)]
       .finally ->
