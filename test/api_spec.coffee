@@ -359,16 +359,9 @@ describe "api", ->
       @timeout helper.TIMEOUT_MEDIUM
       cloudinary.v2.api.transformations()
       .then (result)->
-        transformation = find_by_attr(result.transformations, "name", EXPLICIT_TRANSFORMATION_NAME)
-        expect(result.next_cursor).not.to.be.empty()
-        expect(transformation).not.to.eql(undefined)
-        expect(transformation.used).to.be.ok()
-        previous_cursor = result.next_cursor
-        cloudinary.v2.api.transformations(next_cursor: result.next_cursor)
-        .then (result)-> [previous_cursor, result]
-      .then ([previous_cursor, result])->
-        expect(result).not.to.be.empty()
-        expect(result.next_cursor).not.to.eql(previous_cursor)
+        expect(result).to.have.key("transformations")
+        expect(result.transformations).not.to.be.empty()
+        expect(result.transformations[0]).to.have.key('used')
 
     it "should allow getting transformation metadata", () ->
       @timeout helper.TIMEOUT_MEDIUM
@@ -652,7 +645,7 @@ describe "api", ->
           new RegExp("/resources/image/moderations/manual/#{status2}$").test(arg?.pathname)
         , "/resources/image/moderations/manual/#{status}")
         sinon.assert.calledWith request, sinon.match( (arg)->
-          /^moderations=true$/.test(arg?.query) 
+          "moderations=true" == arg?.query
         , "moderations=true")
 
   # For this test to work, "Auto-create folders" should be enabled in the Upload Settings.
