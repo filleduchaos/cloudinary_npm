@@ -412,13 +412,10 @@ describe "api", ->
     it "should allow unsafe update of named transformation", ()->
       @timeout helper.TIMEOUT_MEDIUM
 
-      console.log("Create transformation named: ", transformationName)
       cloudinary.v2.api.create_transformation(transformationName, {crop: "scale", width: 102})
       .then (result) ->
-        console.log("Updating transformation named: ", transformationName)
         cloudinary.v2.api.update_transformation(transformationName, {unsafe_update: {crop: "scale", width: 103}})
       .then (result) ->
-        console.log("Fetching transformation named: ", transformationName)
         cloudinary.v2.api.transformation(transformationName)
       .then (transformation)->
         expect(transformation).not.to.eql(undefined)
